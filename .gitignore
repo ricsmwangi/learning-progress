@@ -4,6 +4,32 @@
 *.exe
 a.out
 
+# Object / archive / shared libs
+*.obj
+*.lo
+*.la
+*.a
+*.so
+*.dll
+*.elf
+
+# Dependency files and generated files
+*.d
+*.su
+
+# Build folders
+/build/
+/bin/
+/out/
+/dist/
+/target/
+
+# Debug / crash dumps
+*.stackdump
+*.core
+
+# Temporary and editor files
+
 # Editors
 .vscode/
 .idea/
@@ -13,14 +39,18 @@ a.out
 *.log
 
 # OS
+
+# Coverage and profiler
 .DS_Store
 
 # Binary blobs
 *.bin
 
+# macOS
 # Node (if any)
 node_modules/
 
+# python bytecode (in case of scripts)
 # Ignore any compiled artifacts in nested folders
 **/*.o
 **/*.out
