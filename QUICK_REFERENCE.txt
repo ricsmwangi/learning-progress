@@ -1,0 +1,321 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                    C PROGRAMMING QUICK REFERENCE CARD                     ║
+║                    From Strings to Embedded Systems                        ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════════════
+STRING FUNCTIONS QUICK REFERENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+SAFE INPUT:
+    char buf[100];
+    fgets(buf, sizeof(buf), stdin);
+    buf[strcspn(buf, "\n")] = 0;
+
+LENGTH:
+    size_t len = strlen(str);
+
+COPY (SAFE):
+    strncpy(dest, src, sizeof(dest) - 1);
+    dest[sizeof(dest) - 1] = '\0';
+
+COMPARE:
+    strcmp(s1, s2);      // 0 if equal
+    strncmp(s1, s2, n);  // Compare first n
+
+CONCATENATE (SAFE):
+    strncat(dest, src, sizeof(dest) - strlen(dest) - 1);
+
+FIND:
+    strchr(str, 'c');           // Find character
+    strstr(str, "substr");      // Find substring
+    strpbrk(str, "aeiou");      // Find any char in set
+
+TOKENIZE:
+    char tmp[100];
+    strcpy(tmp, str);
+    char *token = strtok(tmp, ",");
+    while (token) {
+        printf("%s\n", token);
+        token = strtok(NULL, ",");
+    }
+
+CHARACTER VALIDATION (<ctype.h>):
+    isalpha(c)   - Letter?
+    isdigit(c)   - Digit?
+    isalnum(c)   - Alphanumeric?
+    isspace(c)   - Whitespace?
+    isupper(c)   - Uppercase?
+    islower(c)   - Lowercase?
+    toupper(c)   - To uppercase
+    tolower(c)   - To lowercase
+
+
+═══════════════════════════════════════════════════════════════════════════════
+BITWISE OPERATIONS QUICK REFERENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+BASIC OPERATIONS:
+    a & b       - AND
+    a | b       - OR
+    a ^ b       - XOR
+    ~a          - NOT
+    a << n      - Left shift (×2^n)
+    a >> n      - Right shift (÷2^n)
+
+BIT MANIPULATION PATTERNS:
+    Set bit n:       value |= (1 << n);
+    Clear bit n:     value &= ~(1 << n);
+    Toggle bit n:    value ^= (1 << n);
+    Check bit n:     if (value & (1 << n))
+    Get bit n:       (value >> n) & 1
+
+USEFUL MASKS:
+    0x01  (0b0001) - 1 bit
+    0x03  (0b0011) - 2 bits
+    0x0F  (0b1111) - 4 bits
+    0xFF  (0b11111111) - 8 bits
+
+DEFINE MACROS:
+    #define BIT_SET(r, b)      ((r) |= (1 << (b)))
+    #define BIT_CLEAR(r, b)    ((r) &= ~(1 << (b)))
+    #define BIT_TOGGLE(r, b)   ((r) ^= (1 << (b)))
+    #define BIT_CHECK(r, b)    (((r) >> (b)) & 1)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+MEMORY & POINTERS QUICK REFERENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+POINTERS:
+    int x = 42;
+    int *ptr = &x;           // Pointer to x
+    printf("%d", *ptr);      // Dereference (42)
+
+ARRAYS:
+    int arr[3] = {10, 20, 30};
+    int *p = arr;            // Points to first element
+    p++;                     // Points to arr[1]
+
+STRUCTURES:
+    typedef struct {
+        uint8_t field1;
+        uint16_t field2;
+    } MyStruct;
+
+HARDWARE POINTERS:
+    // Map to hardware register at address
+    volatile uint32_t *reg = (volatile uint32_t *)0x40000000;
+    *reg = 0xFF;
+    uint32_t value = *reg;
+
+VOLATILE KEYWORD:
+    volatile - tells compiler not to optimize
+    Use for: Hardware registers, ISR variables
+
+
+═══════════════════════════════════════════════════════════════════════════════
+EMBEDDED DATA TYPES (<stdint.h>)
+═══════════════════════════════════════════════════════════════════════════════
+
+UNSIGNED:
+    uint8_t   - 0 to 255
+    uint16_t  - 0 to 65,535
+    uint32_t  - 0 to 4,294,967,295
+    uint64_t  - 0 to 18,446,744,073,709,551,615
+
+SIGNED:
+    int8_t    - -128 to 127
+    int16_t   - -32,768 to 32,767
+    int32_t   - -2,147,483,648 to 2,147,483,647
+    int64_t   - (large range)
+
+USE FIXED-WIDTH TYPES FOR:
+    ✓ Hardware registers
+    ✓ Network protocols
+    ✓ File formats
+    ✓ Predictable memory layout
+
+
+═══════════════════════════════════════════════════════════════════════════════
+HARDWARE REGISTER PATTERNS
+═══════════════════════════════════════════════════════════════════════════════
+
+DEFINE REGISTER STRUCTURE:
+    typedef struct {
+        volatile uint32_t CR;      // Control Register
+        volatile uint32_t SR;      // Status Register
+        volatile uint32_t DR;      // Data Register
+    } Peripheral_t;
+
+MEMORY MAP:
+    Peripheral_t *dev = (Peripheral_t *)0x40000000;
+
+READ REGISTER:
+    uint32_t status = dev->SR;
+
+WRITE REGISTER:
+    dev->DR = 0xFF;
+
+SET BITS:
+    dev->CR |= (0x3 << 4);
+
+CLEAR BITS:
+    dev->CR &= ~(0x3 << 4);
+
+CHECK BITS:
+    if (dev->SR & ERROR_FLAG) { ... }
+
+BIT FIELD STRUCT:
+    typedef struct {
+        uint8_t enable : 1;
+        uint8_t mode : 2;
+        uint8_t : 5;            // Reserved bits
+    } ControlReg;
+
+
+═══════════════════════════════════════════════════════════════════════════════
+COMMON PATTERNS
+═══════════════════════════════════════════════════════════════════════════════
+
+WAIT FOR FLAG:
+    while (!(reg->STATUS & READY_FLAG));
+
+TIMEOUT WAIT:
+    uint32_t timeout = 1000;
+    while (!(reg->STATUS & FLAG) && timeout--);
+    if (timeout == 0) { /* timeout */ }
+
+READ-MODIFY-WRITE:
+    uint32_t tmp = *reg;
+    tmp &= ~(0xF << 4);      // Clear bits 4-7
+    tmp |= (0x3 << 4);       // Set to 0011
+    *reg = tmp;
+
+SET RANGE OF BITS:
+    uint8_t mask = 0xF << 4;  // Bits 4-7
+    value = (value & ~mask) | (new_val << 4);
+
+CHECK MULTIPLE FLAGS:
+    if ((reg->SR & (FLAG1 | FLAG2)) == (FLAG1 | FLAG2)) { ... }
+
+INTERRUPT HANDLER:
+    volatile int interrupt_flag = 0;
+    
+    void ISR_Handler() {
+        interrupt_flag = 1;
+        CLEAR_ISR_FLAG();
+    }
+    
+    // In main loop:
+    if (interrupt_flag) {
+        interrupt_flag = 0;
+        handle_interrupt();
+    }
+
+
+═══════════════════════════════════════════════════════════════════════════════
+DEBUGGING CHECKLIST
+═══════════════════════════════════════════════════════════════════════════════
+
+String Issues:
+    ☐ Used fgets() instead of scanf()?
+    ☐ Removed newline with strcspn?
+    ☐ Checked buffer size in strncpy?
+    ☐ Added null terminator?
+    ☐ Made copy before strtok?
+
+Bit Operation Issues:
+    ☐ Used correct bit position?
+    ☐ Correct operation (set/clear/toggle)?
+    ☐ Used ~(1 << n) to clear?
+    ☐ Mask size correct?
+
+Hardware Issues:
+    ☐ Used 'volatile' keyword?
+    ☐ Correct memory address?
+    ☐ Correct register size (8/16/32 bit)?
+    ☐ Read datasheet for bit meanings?
+    ☐ Checked endianness?
+
+Memory Issues:
+    ☐ Checked pointer before deref?
+    ☐ Correct struct alignment?
+    ☐ Buffer overflow possible?
+    ☐ Proper memory initialization?
+
+
+═══════════════════════════════════════════════════════════════════════════════
+MICRO LEARNING PATH
+═══════════════════════════════════════════════════════════════════════════════
+
+Arduino (2-4 weeks):
+    Week 1-2: digitalWrite, digitalWrite, pinMode, delay
+    Week 3-4: PWM (analogWrite), analog input, Serial
+
+STM32 (4-8 weeks):
+    Week 1-2: GPIO, LED blink via HAL
+    Week 3-4: UART, interrupts
+    Week 5-6: Timers, PWM
+    Week 7-8: ADC, I2C
+
+RISC-V (Advanced):
+    After Arduino/STM32
+    Start with emulator
+    Learn ISA
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ONE-LINER REFERENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+Safe string input:      fgets(buf, size, stdin); buf[strcspn(buf, "\n")] = 0;
+Set bit N:              val |= (1 << N);
+Clear bit N:            val &= ~(1 << N);
+Check if bit set:       if (val & (1 << N))
+Toggle bit N:           val ^= (1 << N);
+Get bit N value:        bit = (val >> N) & 1;
+Hardware register ptr:  volatile uint32_t *reg = (volatile uint32_t *)addr;
+Define macro set/clr:   #define SET(r,b) ((r)|=(1<<b)); #define CLR(r,b) ((r)&=~(1<<b))
+Wait for flag:          while (!(reg->SR & FLAG_MASK));
+Character check:        if (isdigit(c)) if (isalpha(c)) if (isupper(c))
+String compare:         strcmp(s1, s2) == 0
+String search:          strstr(str, "search")
+String tokenize:        strtok(strcpy(tmp, str), ",")
+
+
+═══════════════════════════════════════════════════════════════════════════════
+USEFUL INCLUDES
+═══════════════════════════════════════════════════════════════════════════════
+
+#include <stdio.h>      // Input/output
+#include <string.h>     // String functions
+#include <ctype.h>      // Character classification
+#include <stdint.h>     // Fixed-width types (uint8_t, etc.)
+#include <stdlib.h>     // General utilities (atoi, malloc, etc.)
+#include <time.h>       // Time functions
+#include <math.h>       // Math functions
+#include <assert.h>     // Assertions
+#include <limits.h>     // Type limits
+
+
+═══════════════════════════════════════════════════════════════════════════════
+COMPILATION COMMANDS
+═══════════════════════════════════════════════════════════════════════════════
+
+Basic compile:          gcc file.c -o program
+With warnings:          gcc -Wall -Wextra file.c -o program
+With debug info:        gcc -g file.c -o program
+Optimize for speed:     gcc -O2 file.c -o program
+Optimize for size:      gcc -Os file.c -o program
+With all checks:        gcc -Wall -Wextra -g -pedantic file.c -o program
+Link math library:      gcc file.c -lm -o program
+Link string library:    gcc file.c -lc -o program
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Good luck on your embedded systems journey! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,460 @@
+/*
+ * C LEARNING ROADMAP & CHEAT SHEET
+ * =================================
+ * A guide to track your progress from strings to embedded systems
+ */
+
+=============================================================================
+SECTION 1: STRINGS (✓ MASTERED)
+=============================================================================
+
+String Functions Summary:
+├─ strcpy(dest, src)           - Copy string (UNSAFE)
+├─ strncpy(dest, src, n)       - Copy n characters (SAFE)
+├─ strcat(s1, s2)              - Concatenate strings
+├─ strncat(s1, s2, n)          - Concatenate n characters
+├─ strcmp(s1, s2)              - Compare strings (returns 0 if equal)
+├─ strncmp(s1, s2, n)          - Compare n characters
+├─ strlen(str)                 - Get string length
+├─ strchr(str, c)              - Find character in string
+├─ strstr(str, substr)         - Find substring
+├─ strtok(str, delim)          - Tokenize string (MODIFIES original!)
+└─ strpbrk(str, chars)         - Find first char matching set
+
+Character Validation (ctype.h):
+├─ isalpha(c)     - Is alphabetic?
+├─ isdigit(c)     - Is digit?
+├─ isalnum(c)     - Is alphanumeric?
+├─ isspace(c)     - Is whitespace?
+├─ isupper(c)     - Is uppercase?
+├─ islower(c)     - Is lowercase?
+├─ toupper(c)     - Convert to uppercase
+├─ tolower(c)     - Convert to lowercase
+└─ isxdigit(c)    - Is hex digit?
+
+Key Takeaways:
+✓ Always use fgets() instead of scanf() for strings
+✓ Always add null terminator when using strncpy
+✓ Be careful with strtok - it modifies the original string
+✓ Use strncmp and strncat for safety
+
+Practice Challenges Done:
+✓ Palindrome checking
+✓ Caesar cipher encryption
+✓ String reversal
+✓ Remove duplicates
+✓ String to integer conversion
+✓ Password validation
+
+
+=============================================================================
+SECTION 2: EMBEDDED SYSTEMS BASICS (→ NOW LEARNING)
+=============================================================================
+
+BITWISE OPERATIONS (Essential for Embedded):
+
+1. Bitwise AND (&)
+   a = 0b1100 (12)
+   b = 0b1010 (10)
+   a & b = 0b1000 (8)
+   
+   Usage: Masking/Clearing bits
+   Example: status & 0x01  -> check if bit 0 is set
+
+2. Bitwise OR (|)
+   a | b = 0b1110 (14)
+   
+   Usage: Setting bits
+   Example: flags |= (1 << 3)  -> set bit 3
+
+3. Bitwise XOR (^)
+   a ^ b = 0b0110 (6)
+   
+   Usage: Toggling bits
+   Example: toggle ^= (1 << 1)  -> flip bit 1
+
+4. Bitwise NOT (~)
+   ~a = 0xFFFFFFF3
+   
+   Usage: Inverting
+   Example: reg &= ~(1 << 2)  -> clear bit 2
+
+5. Left Shift (<<)
+   a << 1 = 24 (multiply by 2)
+   a << 2 = 48 (multiply by 4)
+   
+   Usage: Positioning bits
+   Example: mask = 1 << 5  -> bit mask at position 5
+
+6. Right Shift (>>)
+   a >> 1 = 6 (divide by 2)
+   a >> 2 = 3 (divide by 4)
+   
+   Usage: Extracting bits
+   Example: bit = (reg >> 3) & 1  -> extract bit 3
+
+Bit Manipulation Patterns:
+
+Set bit:       reg |= (1 << bit)
+Clear bit:     reg &= ~(1 << bit)
+Toggle bit:    reg ^= (1 << bit)
+Check bit:     if (reg & (1 << bit))
+Get bit value: (reg >> bit) & 1
+Check mask:    if (reg & mask)
+Set mask:      reg |= mask
+Clear mask:    reg &= ~mask
+
+HELPFUL MACROS (Use these in real projects!):
+
+#define BIT_SET(reg, bit)      ((reg) |= (1 << (bit)))
+#define BIT_CLEAR(reg, bit)    ((reg) &= ~(1 << (bit)))
+#define BIT_TOGGLE(reg, bit)   ((reg) ^= (1 << (bit)))
+#define BIT_CHECK(reg, bit)    (((reg) >> (bit)) & 1)
+#define BIT_POSITION(bit)      (1 << (bit))
+
+
+=============================================================================
+SECTION 3: MEMORY & POINTERS (Critical for Embedded)
+=============================================================================
+
+Memory Concepts:
+
+• Each variable has an address in RAM
+• & operator gets address of variable
+• * operator dereferences pointer
+
+Example:
+int value = 42;
+int *ptr = &value;        // ptr points to value
+printf("%d", *ptr);       // prints 42
+
+Pointer Arithmetic:
+
+int array[3] = {10, 20, 30};
+int *p = array;
+p++  -> points to array[1]
+p[1] -> same as *(p+1)
+
+Byte offset = index × sizeof(type)
+
+Memory-Mapped I/O (Hardware Interface):
+
+Hardware registers exist at specific memory addresses.
+We access them via pointers:
+
+typedef struct {
+    volatile uint32_t CR;      // Control Register
+    volatile uint32_t SR;      // Status Register  
+    volatile uint32_t DR;      // Data Register
+} UART_t;
+
+// Point to hardware at address 0x40000000
+UART_t *uart = (UART_t *)0x40000000;
+
+// Now we can access hardware!
+uart->DR = 'A';  // Send character
+char c = uart->DR;  // Receive character
+
+The 'volatile' keyword tells compiler:
+- Value might change without code explicitly changing it
+- Don't optimize away reads/writes to this memory
+
+
+=============================================================================
+SECTION 4: DATA TYPES FOR EMBEDDED
+=============================================================================
+
+Use <stdint.h> for fixed-width types:
+
+uint8_t   - unsigned 8-bit  (0 to 255)
+int8_t    - signed 8-bit    (-128 to 127)
+
+uint16_t  - unsigned 16-bit (0 to 65535)
+int16_t   - signed 16-bit   (-32768 to 32767)
+
+uint32_t  - unsigned 32-bit (0 to 4294967295)
+int32_t   - signed 32-bit
+
+uint64_t  - unsigned 64-bit
+int64_t   - signed 64-bit
+
+Why use these?
+✓ Predictable size across architectures
+✓ Essential for hardware register mapping
+✓ Prevents overflow bugs
+
+
+=============================================================================
+SECTION 5: STRUCTURES & BIT FIELDS
+=============================================================================
+
+Mapping hardware registers with structs:
+
+typedef struct {
+    uint8_t value : 1;      // Bit 0 only
+    uint8_t dir : 1;        // Bit 1 only
+    uint8_t pull : 1;       // Bit 2 only
+    uint8_t reserved : 5;   // Bits 3-7
+} GPIO_Register;
+
+This packs into 1 byte, perfect for hardware!
+
+Struct memory layout:
+- Compiler packs bit fields into minimal space
+- Useful for hardware registers and network packets
+- size of GPIO_Register = 1 byte
+
+
+=============================================================================
+SECTION 6: EMBEDDED PROJECT PROGRESSION
+=============================================================================
+
+Level 1: Hardware Basics (Current)
+├─ Bitwise operations ✓
+├─ Memory addresses ✓
+├─ Pointers ✓
+└─ Hardware simulation ✓
+
+Level 2: Microcontroller Setup
+├─ Choose platform (Arduino easiest)
+├─ GPIO control
+├─ LED blink
+└─ Button input with debouncing
+
+Level 3: Peripherals
+├─ UART/Serial communication
+├─ Timer/PWM
+├─ ADC (Analog to Digital)
+└─ Interrupts
+
+Level 4: Advanced
+├─ I2C/SPI protocols
+├─ Sensor integration
+├─ Real-time OS concepts
+└─ Low-power modes
+
+
+=============================================================================
+SECTION 7: QUICK REFERENCE - GPIO EXAMPLE
+=============================================================================
+
+Simulating a GPIO pin register:
+
+#include <stdint.h>
+
+// GPIO register bits
+#define PIN_VALUE      0
+#define PIN_OUTPUT_EN  1
+#define PIN_PULL_UP    2
+
+volatile uint8_t GPIO_PORT = 0;
+
+// Set pin as output
+GPIO_PORT |= (1 << PIN_OUTPUT_EN);
+
+// Write HIGH
+GPIO_PORT |= (1 << PIN_VALUE);
+
+// Write LOW
+GPIO_PORT &= ~(1 << PIN_VALUE);
+
+// Read pin state
+uint8_t state = (GPIO_PORT >> PIN_VALUE) & 1;
+
+// Enable pull-up
+GPIO_PORT |= (1 << PIN_PULL_UP);
+
+
+=============================================================================
+SECTION 8: COMMON EMBEDDED PATTERNS
+=============================================================================
+
+1. Register Read-Modify-Write:
+   uint32_t reg = *register_ptr;
+   reg &= ~(0xF << 4);        // Clear bits 4-7
+   reg |= (0x3 << 4);         // Set bits 4-7 to 0011
+   *register_ptr = reg;
+
+2. Wait for flag:
+   while (!(STATUS_REG & FLAG_BIT));
+   // Do something when flag is set
+
+3. Timeout with counter:
+   uint32_t timeout = 1000;
+   while (!(STATUS_REG & FLAG_BIT) && timeout--);
+   if (timeout == 0) { /* timeout occurred */ }
+
+4. Interrupt handler:
+   volatile uint8_t interrupt_flag = 0;
+   
+   void ISR_Handler(void) {
+       interrupt_flag = 1;
+       CLEAR_INTERRUPT_FLAG();
+   }
+   
+   in main:
+   if (interrupt_flag) {
+       interrupt_flag = 0;
+       handle_interrupt();
+   }
+
+
+=============================================================================
+SECTION 9: DEBUGGING EMBEDDED CODE
+=============================================================================
+
+Common Issues:
+
+1. Buffer Overflow in Strings
+   Problem: strcpy doesn't check length
+   Solution: Use strncpy with buffer size
+   
+2. Bit Operations
+   Problem: (val >> 5) & 0x03 only gets 2 bits
+   Solution: Use correct mask for number of bits needed
+   
+3. Volatile Keyword
+   Problem: Compiler optimizes away register reads
+   Solution: Always use 'volatile' for hardware
+   
+4. Null Pointer Dereference
+   Problem: int *ptr = NULL; int x = *ptr;
+   Solution: Always check pointer before use
+   
+5. Memory Alignment
+   Problem: Misaligned structs cause issues
+   Solution: Use #pragma pack or __attribute__((packed))
+
+
+=============================================================================
+SECTION 10: NEXT STEPS AFTER FUNDAMENTALS
+=============================================================================
+
+Choice 1: Arduino Path (Easiest to start)
+   → Download Arduino IDE
+   → Start with digitalWrite, digitalRead
+   → Project: Traffic light controller
+   → Next: PWM LED dimming
+
+Choice 2: STM32 Path (Professional)
+   → STM32CubeMX for hardware config
+   → STM32CubeIDE for development
+   → HAL drivers for peripherals
+   → Project: UART echo, timer interrupts
+
+Choice 3: RISC-V / Custom MCU
+   → Learn processor architecture
+   → Direct register manipulation
+   → No abstraction layer
+   → Full hardware control
+
+Recommended: Start with Arduino, then transition to STM32
+
+
+=============================================================================
+CHEAT SHEET - STRING OPERATIONS
+=============================================================================
+
+Safe string input:
+    char buffer[100];
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = 0;  // Remove newline
+
+Copy safely:
+    char src[100] = "hello";
+    char dest[100];
+    strncpy(dest, src, sizeof(dest) - 1);
+    dest[sizeof(dest) - 1] = '\0';
+
+Concatenate safely:
+    char str[100] = "Hello";
+    strncat(str, " World", sizeof(str) - strlen(str) - 1);
+
+Compare:
+    if (strcmp(str1, str2) == 0) { /* equal */ }
+    if (strncmp(str1, str2, 5) == 0) { /* first 5 equal */ }
+
+Find substring:
+    if (strstr(str, "substr") != NULL) { /* found */ }
+    char *found = strchr(str, 'x');
+    if (found) { /* found char 'x' */ }
+
+Tokenize:
+    char copy[100];
+    strcpy(copy, str);  // Make a copy!
+    char *token = strtok(copy, ",");
+    while (token) {
+        printf("%s\n", token);
+        token = strtok(NULL, ",");
+    }
+
+
+=============================================================================
+CHEAT SHEET - BITWISE OPERATIONS
+=============================================================================
+
+To set bit N:
+    value |= (1 << N);
+
+To clear bit N:
+    value &= ~(1 << N);
+
+To toggle bit N:
+    value ^= (1 << N);
+
+To check bit N:
+    if (value & (1 << N)) { /* bit is set */ }
+
+To get bit N value:
+    int bit_value = (value >> N) & 1;
+
+To set multiple bits (mask):
+    value |= mask;
+
+To clear multiple bits:
+    value &= ~mask;
+
+To check if all bits in mask are set:
+    if ((value & mask) == mask) { /* all set */ }
+
+To check if any bit in mask is set:
+    if (value & mask) { /* at least one set */ }
+
+Left shift by N (multiply by 2^N):
+    result = value << N;
+
+Right shift by N (divide by 2^N):
+    result = value >> N;
+
+
+=============================================================================
+LEARNING SUMMARY
+=============================================================================
+
+✓ Phase 1: Strings COMPLETE
+  - String functions
+  - Character operations
+  - Practical challenges
+  
+→ Phase 2: Embedded Fundamentals (Current)
+  - Bitwise operations
+  - Memory and pointers
+  - Hardware simulation
+  - Register manipulation
+  
+→ Phase 3: Microcontroller Programming (Next)
+  - Arduino/STM32 setup
+  - GPIO control
+  - Timers and PWM
+  - Serial communication
+  - Interrupts
+  
+→ Phase 4: Advanced Embedded (After MCU basics)
+  - Protocols (I2C, SPI)
+  - DMA (Direct Memory Access)
+  - RTOS concepts
+  - Power management
+
+
+You're on the right track! Keep practicing with hands-on projects.
+=============================================================================
