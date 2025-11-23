@@ -1,0 +1,84 @@
+# Ignore compiled objects and binaries
+*.o
+*.out
+*.exe
+a.out
+**/*.o
+
+# Build directories
+/build/
+/bin/
+/out/
+
+# Editors and temp files
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# Coverage
+*.gcda
+*.gcno
+*.gcov
+
+# Misc
+*.core
+*.log
+# Build artifacts
+*.o
+*.out
+*.exe
+a.out
+
+# Object / archive / shared libs
+*.obj
+*.lo
+*.la
+*.a
+*.so
+*.dll
+*.elf
+
+# Dependency files and generated files
+*.d
+*.su
+
+# Build folders
+/build/
+/bin/
+/out/
+/dist/
+/target/
+
+# Debug / crash dumps
+*.stackdump
+*.core
+
+# Temporary and editor files
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# OS
+
+# Coverage and profiler
+.DS_Store
+
+# Binary blobs
+*.bin
+
+# macOS
+# Node (if any)
+node_modules/
+
+# python bytecode (in case of scripts)
+# Ignore any compiled artifacts in nested folders
+**/*.o
+**/*.out
+**/a.out
