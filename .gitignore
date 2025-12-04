@@ -1,57 +1,71 @@
-# Build artifacts
+# Compiled binaries and object files
 *.o
 *.out
-*.exe
-a.out
-
-# Object / archive / shared libs
-*.obj
-*.lo
-*.la
 *.a
 *.so
-*.dll
-*.elf
+*.dylib
 
-# Dependency files and generated files
-*.d
-*.su
+# Executables (common names from projects)
+student_management
+contact_manager
+idle1
+test_copilot
+arch
+format
+host
+fish
+function
+game
+gamenight
+gamenight2
+gamenight3
+pro1
+string1
+string2
+string3
+string4
+alone
+calculator
+add
+add_FIXED
+week_47c
+week_47c_FIXED
+week-47
+week-47_FIXED
+week-47b
+week-47b_FIXED
+week47_d
+week47_d_FIXED
+calloc
+connet
+dyn_ex1
+dyn_ex2
+dyn_ex3
+dyn2
+dynamic1
+project_translate
+project_translate_safe
+tic-fixed
 
-# Build folders
-/build/
-/bin/
-/out/
-/dist/
-/target/
-
-# Debug / crash dumps
-*.stackdump
-*.core
-
-# Temporary and editor files
-
-# Editors
+# Editor and IDE files
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
 
-# Logs
+# Build directories
+build/
+dist/
+cmake-build-debug/
+
+# Temporary files
+*.tmp
+*.bak
 *.log
 
-# OS
-
-# Coverage and profiler
-.DS_Store
-
-# Binary blobs
-*.bin
-
-# macOS
-# Node (if any)
-node_modules/
-
-# python bytecode (in case of scripts)
-# Ignore any compiled artifacts in nested folders
-**/*.o
-**/*.out
-**/a.out
+# System files
+Thumbs.db
