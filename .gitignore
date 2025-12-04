@@ -1,11 +1,32 @@
+# ============================================================================
+# SECURITY: SSH keys, credentials, secrets
+# ============================================================================
+*.key
+*.pem
+*.pub
+id_rsa*
+id_ed25519*
+id_ecdsa*
+known_hosts
+authorized_keys
+.ssh/
+.credentials
+.env
+.env.local
+secrets.txt
+config_local
+
+# ============================================================================
 # Compiled binaries and object files
+# ============================================================================
 *.o
 *.out
 *.a
 *.so
 *.dylib
+*.exe
 
-# Executables (common names from projects)
+# All executables (no extension on Linux/Mac)
 student_management
 contact_manager
 idle1
@@ -27,27 +48,16 @@ string4
 alone
 calculator
 add
-add_FIXED
-week_47c
-week_47c_FIXED
-week-47
-week-47_FIXED
-week-47b
-week-47b_FIXED
-week47_d
-week47_d_FIXED
 calloc
 connet
-dyn_ex1
-dyn_ex2
-dyn_ex3
-dyn2
-dynamic1
-project_translate
-project_translate_safe
+dyn*
+dynamic*
+project_translate*
 tic-fixed
 
+# ============================================================================
 # Editor and IDE files
+# ============================================================================
 .vscode/
 .idea/
 *.swp
@@ -56,16 +66,50 @@ tic-fixed
 .DS_Store
 *.sublime-project
 *.sublime-workspace
+.vim/
+*.iml
 
+# ============================================================================
 # Build directories
+# ============================================================================
 build/
 dist/
 cmake-build-debug/
+CMakeFiles/
 
-# Temporary files
+# ============================================================================
+# Temporary and backup files
+# ============================================================================
 *.tmp
 *.bak
 *.log
+*.orig
+*.*~
+.cache/
+.tmp/
 
+# ============================================================================
 # System files
+# ============================================================================
 Thumbs.db
+.DS_Store
+*.swp
+ehthumbs.db
+
+# ============================================================================
+# Python
+# ============================================================================
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.coverage
+
+# ============================================================================
+# Node/Web
+# ============================================================================
+node_modules/
+.npm
+package-lock.json
+yarn.lock
