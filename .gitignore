@@ -17,6 +17,14 @@ secrets.txt
 config_local
 
 # ============================================================================
+# External repos / submodules / non-projects
+# ============================================================================
+copilot-cli/
+learning-progress/
+week47/
+.gitmodules
+
+# ============================================================================
 # Compiled binaries and object files
 # ============================================================================
 *.o
@@ -26,34 +34,29 @@ config_local
 *.dylib
 *.exe
 
-# All executables (no extension on Linux/Mac)
-student_management
-contact_manager
-idle1
-test_copilot
-arch
-format
-host
-fish
-function
-game
-gamenight
-gamenight2
-gamenight3
-pro1
-string1
-string2
-string3
-string4
-alone
-calculator
-add
-calloc
-connet
-dyn*
-dynamic*
-project_translate*
-tic-fixed
+# Executables (no extension on Linux/Mac)
+*/student_management
+*/contact_manager
+*/idle1
+*/test_copilot
+*/arch
+*/format
+*/host
+*/fish
+*/function
+*/game*
+*/gamenight*
+*/pro1
+*/string*
+*/alone*
+*/calculator
+*/add*
+*/calloc
+*/connet
+*/dyn*
+*/dynamic*
+*/project_translate*
+*/tic-fixed
 
 # ============================================================================
 # Editor and IDE files
@@ -76,6 +79,7 @@ build/
 dist/
 cmake-build-debug/
 CMakeFiles/
+*.cmake
 
 # ============================================================================
 # Temporary and backup files
@@ -93,7 +97,6 @@ CMakeFiles/
 # ============================================================================
 Thumbs.db
 .DS_Store
-*.swp
 ehthumbs.db
 
 # ============================================================================
@@ -113,3 +116,17 @@ node_modules/
 .npm
 package-lock.json
 yarn.lock
+
+# ============================================================================
+# macOS
+# ============================================================================
+.AppleDouble
+.LSOverride
+*.xcworkspace/
+
+# ============================================================================
+# VS Code / Debug
+# ============================================================================
+.vscode/launch.json
+.vscode/settings.json
+.gdb_history
