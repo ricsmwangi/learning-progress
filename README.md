@@ -42,12 +42,6 @@ gcc student_management.c -o student_management
 - Swipeable cards for sharing
 - **Live:** https://github.com/ricsmwangi/graduation-gift
 
-### **Financial Economics (Reference)**
-Exam answers and solutions for actuarial sciences coursework:
-- CAPM and market pricing
-- Option Greeks and pricing models
-- Risk measures and stochastic dominance
-- See `week49/SMS3413_CAT1_ANSWERS.txt`
 
 ## 🛠️ Tech Stack
 
